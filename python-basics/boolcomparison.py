@@ -13,6 +13,6 @@ print(min(arr) < 0 < max(arr))
 
 ###4
 x = 0.1 + 0.2
-print(x == 0.3)               # осторожно: float
+print(x == 0.3)              
 
 ###5
