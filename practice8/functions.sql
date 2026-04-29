@@ -89,3 +89,26 @@ BEGIN
        OR phone = p_value;
 END;
 $$;
+
+-- 5. BULK INSERT PROCEDURE
+-- вставка многих записей
+CREATE OR REPLACE PROCEDURE insert_many_contacts(
+    p_names VARCHAR[], 
+    p_phones VARCHAR[]
+)
+LANGUAGE plpgsql AS $$
+DECLARE
+    i INTEGER;
+BEGIN
+    FOR i IN 1 .. array_upper(p_names, 1) LOOP
+        -- Простая валидация: телефон должен быть длиннее 5 символов
+        IF length(p_phones[i]) >= 5 THEN
+            INSERT INTO contacts (username, phone) 
+            VALUES (p_names[i], p_phones[i])
+            ON CONFLICT (username) DO UPDATE SET phone = p_phones[i];
+        ELSE
+            RAISE NOTICE 'Invalid phone for user %: %', p_names[i], p_phones[i];
+        END IF;
+    END LOOP;
+END;
+$$;
