@@ -1,17 +1,23 @@
--- Run this in pgAdmin or psql
-CREATE DATABASE snake_game;
-
-\c snake_game;
-
-CREATE TABLE IF NOT EXISTS players (
+-- CONTACTS
+CREATE TABLE IF NOT EXISTS contacts (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL
+    username VARCHAR(100) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100),
+    birthday DATE,
+    group_id INT
 );
 
-CREATE TABLE IF NOT EXISTS game_sessions (
+-- GROUPS
+CREATE TABLE IF NOT EXISTS groups (
     id SERIAL PRIMARY KEY,
-    player_id INTEGER REFERENCES players(id),
-    score INTEGER NOT NULL,
-    level_reached INTEGER NOT NULL,
-    played_at TIMESTAMP DEFAULT NOW()
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- PHONES (1-to-many)
+CREATE TABLE IF NOT EXISTS phones (
+    id SERIAL PRIMARY KEY,
+    contact_id INT REFERENCES contacts(id) ON DELETE CASCADE,
+    phone VARCHAR(20),
+    type VARCHAR(10) CHECK (type IN ('home','work','mobile'))
 );
